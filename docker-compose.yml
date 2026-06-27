@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: webapp
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: db
+      DB_NAME: mydb
+      DB_USER: myuser
+      DB_PASS: mypassword
+    depends_on:
+      - db
+    networks:
+      - app-net
+
+  db:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+volumes:
+  pgdata:
+
+networks:
+  app-net:
+    driver: bridge
